@@ -11,6 +11,7 @@ from backend.api.schemas import (
     SavePredictionResponse,
 )
 from backend.pipelines.inference_pipeline import InferencePipeline
+from backend.runtime import build_pipeline
 from backend.utils.exceptions import (
     GEEExtractionError,
     InsufficientObservationsError,
@@ -31,6 +32,9 @@ def root() -> dict[str, str]:
 
 
 def get_pipeline(request: Request) -> InferencePipeline:
+    if not hasattr(request.app.state, "pipeline"):
+        request.app.state.pipeline = build_pipeline()
+        logger.info("Crop classification service ready.")
     return request.app.state.pipeline
 
 
