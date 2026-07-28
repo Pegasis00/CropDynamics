@@ -16,6 +16,7 @@ from __future__ import annotations
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from backend.api.routes import router
@@ -28,11 +29,11 @@ app = FastAPI(title="Crop Classification API", version="1.0.0")
 
 
 @app.get("/")
-def root() -> dict[str, str]:
-    return {
-        "status": "ok",
-        "message": "Crop Classification API is running. Open frontend/index.html to use the app.",
-    }
+def root():
+    index_path = FRONTEND_DIST / "index.html"
+    if index_path.exists():
+        return FileResponse(index_path)
+    return {"status": "ok", "message": "Crop Classification API is running."}
 
 app.add_middleware(
     CORSMiddleware,

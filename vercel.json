@@ -5,7 +5,7 @@
   "functions": {
     "api/index.py": {
       "maxDuration": 60,
-      "excludeFiles": "{frontend/**,tests/**,gee_scripts/**,saved_crop_ndvi/**,*.ipynb,combined_ndvi.csv,PROJECT_OVERVIEW.md,NOTEBOOK_MAPPING.md,.pytest_cache/**,.playwright-mcp/**}"
+      "excludeFiles": "{frontend/node_modules/**,frontend/src/**,tests/**,gee_scripts/**,saved_crop_ndvi/**,*.ipynb,combined_ndvi.csv,PROJECT_OVERVIEW.md,NOTEBOOK_MAPPING.md,.pytest_cache/**,.playwright-mcp/**}"
     }
   },
   "rewrites": [
