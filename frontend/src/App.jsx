@@ -2,7 +2,11 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Chart from "chart.js/auto";
 import { getRelativePosition } from "chart.js/helpers";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8000/api";
+const API_BASE =
+  import.meta.env.VITE_API_BASE ||
+  (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:8000/api"
+    : "/api");
 
 const chartTitles = {
   raw: "Raw and smoothed NDVI",
