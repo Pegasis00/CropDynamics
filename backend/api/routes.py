@@ -1,8 +1,6 @@
 """FastAPI routes."""
 from __future__ import annotations
 
-import os
-
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 from backend.api.schemas import (
@@ -132,23 +130,6 @@ def save_prediction(
 @router.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
-
-
-@router.get("/diagnostics/runtime")
-def runtime_diagnostics(request: Request) -> dict[str, object]:
-    result: dict[str, object] = {
-        "google_cloud_project": os.getenv("GOOGLE_CLOUD_PROJECT"),
-        "has_google_credentials_json": bool(os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")),
-        "google_credentials_json_length": len(os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON") or ""),
-        "has_google_credentials_path": bool(os.getenv("GOOGLE_APPLICATION_CREDENTIALS")),
-    }
-    try:
-        get_pipeline(request)
-        result["pipeline"] = "ok"
-    except HTTPException as exc:
-        result["pipeline"] = "error"
-        result["error"] = exc.detail
-    return result
 
 
 @router.get("/crops")
