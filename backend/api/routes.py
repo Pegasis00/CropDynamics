@@ -1,6 +1,8 @@
 """FastAPI routes."""
 from __future__ import annotations
 
+import os
+
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 from backend.api.schemas import (
@@ -33,8 +35,12 @@ def root() -> dict[str, str]:
 
 def get_pipeline(request: Request) -> InferencePipeline:
     if not hasattr(request.app.state, "pipeline"):
-        request.app.state.pipeline = build_pipeline()
-        logger.info("Crop classification service ready.")
+        try:
+            request.app.state.pipeline = build_pipeline()
+            logger.info("Crop classification service ready.")
+        except Exception as exc:
+            logger.exception("Pipeline initialization failed.")
+            raise HTTPException(status_code=503, detail=f"Pipeline initialization failed: {type(exc).__name__}: {exc}") from exc
     return request.app.state.pipeline
 
 
@@ -126,6 +132,23 @@ def save_prediction(
 @router.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@router.get("/diagnostics/runtime")
+def runtime_diagnostics(request: Request) -> dict[str, object]:
+    result: dict[str, object] = {
+        "google_cloud_project": os.getenv("GOOGLE_CLOUD_PROJECT"),
+        "has_google_credentials_json": bool(os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")),
+        "google_credentials_json_length": len(os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON") or ""),
+        "has_google_credentials_path": bool(os.getenv("GOOGLE_APPLICATION_CREDENTIALS")),
+    }
+    try:
+        get_pipeline(request)
+        result["pipeline"] = "ok"
+    except HTTPException as exc:
+        result["pipeline"] = "error"
+        result["error"] = exc.detail
+    return result
 
 
 @router.get("/crops")
