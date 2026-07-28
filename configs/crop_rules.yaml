@@ -1,0 +1,55 @@
+# Second-stage post-model crop verification rules.
+# These rules run after the model predicts a crop and before the response/save.
+# If a predicted crop fails its rules, the API returns fallback_label instead.
+#
+# Supported rule blocks per crop:
+#
+# duration_days:
+#   min: 90              # value must be >= min
+#   min_exclusive: 90    # value must be > min_exclusive
+#   max: 180             # value must be <= max
+#   max_exclusive: 180   # value must be < max_exclusive
+#
+# sos_month / start_month:
+#   allowed: [6, 7, 8]   # SOS month must be one of these months
+#   min: 6               # SOS month must be >= 6
+#   max: 8               # SOS month must be <= 8
+#
+# eos_month / end_month:
+#   allowed: [10, 11, 12]
+#
+# peak_month:
+#   allowed: [8, 9]
+#
+# query_month:
+#   allowed: [9, 10]
+#
+# Numeric NDVI/quality metrics can use min/max/min_exclusive/max_exclusive:
+# amplitude, baseline_ndvi, peak_ndvi_raw, peak_ndvi_smooth,
+# sos_ndvi_raw, sos_ndvi_smooth, eos_ndvi_raw, eos_ndvi_smooth,
+# signal_to_noise.
+
+enabled: true
+
+# Label used when a model-predicted crop fails its second-stage rules.
+fallback_label: "Other Crop"
+
+crops:
+  Sugarcane:
+    duration_days:
+      # Sugarcane must be strictly greater than 280 days.
+      min_exclusive: 280
+
+  Cotton: {}
+  Onion: {}
+  Paddy: {}
+
+  Wheat:
+    duration_days:
+      # Wheat must be strictly less than 180 days.
+      max_exclusive: 180
+    # Example optional season rules:
+    # start_month:
+    #   allowed: [10, 11, 12]
+    # end_month:
+    #   allowed: [2, 3, 4, 5]

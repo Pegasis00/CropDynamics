@@ -1,0 +1,30 @@
+# Signal-processing / lifecycle-extraction parameters.
+# These mirror Stage C and Stage D of the reference notebook exactly.
+# Do not change these unless you intend to change the algorithm's behavior.
+
+smoothing:
+  # Savitzky-Golay window sizing rule, keyed by series length n:
+  #   n < 20  -> window 5
+  #   n < 40  -> window 7
+  #   else    -> window 11
+  # (each window is additionally clipped to be <= n and odd)
+  window_by_length:
+    - {max_n: 20, window: 5}
+    - {max_n: 40, window: 7}
+    - {max_n: null, window: 11}
+  polyorder: 2
+  min_series_length: 5
+
+peak_valley_detection:
+  prominence_factor: 0.15      # multiplies the (p90 - p10) spread
+  prominence_min: 0.03
+  prominence_max: 0.15
+  sig_multiplier: 4            # threshold = max(prominence, sig_multiplier * noise)
+
+boundary_selection:
+  growth_score_window: 4
+  decline_score_window: 4
+
+candidate_quality:
+  stable_peak_fraction: 0.90   # baseline + 0.90 * amplitude
+  plateau_fraction: 0.95       # baseline + 0.95 * amplitude

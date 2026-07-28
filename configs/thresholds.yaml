@@ -1,0 +1,48 @@
+# Candidate-lifecycle validation thresholds (Stage D of the notebook).
+#
+# duration_stats is generated offline from the training data by grouping
+# accepted, ground-truth-matching candidates per crop and computing
+# median + IQR (see notebook Stage D / "Validation" section). Regenerate
+# this block whenever the training data changes — do not hand-edit the
+# numbers unless you are intentionally overriding the learned bounds.
+#
+# check_duration(candidate): lower = median - 2*iqr, upper = median + 2*iqr
+
+duration_iqr_multiplier: 2
+
+duration_stats:
+  Cotton:
+    median: 165
+    iqr: 30
+  Onion:
+    median: 120
+    iqr: 25
+  Paddy:
+    median: 130
+    iqr: 20
+  Sugarcane:
+    median: 300
+    iqr: 45
+  Wheat:
+    median: 150
+    iqr: 20
+validation:
+  amplitude_floor: 0  # candidate["amplitude"] must be > this value
+  require_ground_truth_match: true   # only meaningful for offline training;
+                                       # skipped automatically for live inference
+                                       # since a query has no ground-truth month
+
+# Cheap pre-check before running the full lifecycle pipeline: if the
+# extracted NDVI series never rises above this, the point is very unlikely
+# to be cropland (bare soil, water, roads, buildings, urban land all sit
+# well below this most of the year).
+location_validation:
+  min_ndvi_mean: 0.15
+  min_ndvi_max: 0.25
+
+# Second gate after a lifecycle has been selected. This catches flat,
+# low-vegetation signals that can otherwise be forced into one of the
+# trained crop classes.
+crop_signal_validation:
+  min_peak_ndvi: 0.40
+  min_amplitude: 0.12

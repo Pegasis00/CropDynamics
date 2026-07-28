@@ -1,0 +1,34 @@
+# Which of the 8 trained models (4 algorithms x {raw, smooth} feature sets)
+# is used for live inference. This is a config value, not a hardcoded
+# algorithm choice — set it from the notebook's comparison_df (sorted by
+# Smooth_Test_Macro_F1, then Smooth_Test_Acc; top row wins by default).
+
+selected_algorithm: "LightGBM"   # one of: RandomForest, XGBoost, LightGBM, SVM
+selected_feature_set: "smooth"   # "smooth" or "raw"
+
+model_weights_dir: "model_weights"
+
+artifact_naming:
+  # {algorithm} is replaced with RandomForest / XGBoost / LightGBM / SVM
+  smooth_model_file: "model_smooth_{algorithm}.joblib"
+  raw_model_file: "model_raw_{algorithm}.joblib"
+  label_encoder_file: "label_encoder.joblib"
+
+classes:
+  # From the `crop label` column of the training CSV.
+  # Config-driven: if the crop set changes, edit this list only.
+  - Cotton
+  - Onion
+  - Paddy
+  - Sugarcane
+  - Wheat
+
+# Minimum predict_proba confidence to accept the top predicted class.
+# Below this, the app returns "Other Crop" instead of forcing one of the
+# trained classes.
+unknown_crop_confidence_floor: 0.35
+
+# Optional, opt-in agreement/fusion checking across the 8 model runs.
+# Disabled by default per spec — the app must show ONE final prediction
+# from the single selected model, never a silent blend.
+enable_agreement_check: false

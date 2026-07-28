@@ -1,0 +1,34 @@
+# Google Earth Engine NDVI extraction settings.
+# These map to the live point-extraction settings
+# (CLOUD_LIMIT, PIXEL_SCALE, MONTHS_BEFORE, MONTHS_AFTER).
+# Change values here — never in code.
+
+collection: "COPERNICUS/S2_SR_HARMONIZED"
+
+# Google Cloud project registered for Earth Engine. You can also leave this
+# blank and set GOOGLE_CLOUD_PROJECT in your shell before starting the API.
+earth_engine_project: "gen-lang-client-0300041075"
+
+# Max scene-level cloud percentage. Scenes with CLOUDY_PIXEL_PERCENTAGE
+# >= this value are dropped before sampling.
+cloud_threshold_pct: 20
+
+# Farm/query date window used to build the filterDate() range:
+# [date - before_months, date + after_months]
+extraction_window_months:
+  before: 10
+  after: 10
+
+# Sentinel-2 native resolution. Not user-adjustable; sampling is always
+# done at the exact point's native-resolution pixel.
+pixel_scale_m: 10
+
+# Band names used to compute NDVI = normalizedDifference([nir, red])
+ndvi_bands:
+  nir: "B8"
+  red: "B4"
+
+# Minimum number of NDVI observations required before the pipeline will
+# attempt lifecycle extraction. Below this, the app returns
+# "Not enough NDVI observations."
+min_observations: 5
