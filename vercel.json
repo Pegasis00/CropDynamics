@@ -1,10 +1,10 @@
 {
-  "installCommand": "python -m pip install -r requirements-vercel.txt && cd frontend && npm ci",
-  "buildCommand": "cd frontend && npm run build",
+  "buildCommand": "cd frontend && npm ci && npm run build",
   "outputDirectory": "frontend/dist",
   "functions": {
     "api/index.py": {
-      "maxDuration": 60
+      "maxDuration": 60,
+      "excludeFiles": "{frontend/**,tests/**,gee_scripts/**,saved_crop_ndvi/**,*.ipynb,combined_ndvi.csv,PROJECT_OVERVIEW.md,NOTEBOOK_MAPPING.md,.pytest_cache/**,.playwright-mcp/**}"
     }
   },
   "rewrites": [

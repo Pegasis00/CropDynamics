@@ -1,0 +1,9 @@
+-r requirements.txt
+
+pytest>=8.0
+
+# Only needed if you re-run backend/models/trainer.py.
+xgboost>=2.0
+# shap>=0.45
+# matplotlib>=3.8
+# seaborn>=0.13

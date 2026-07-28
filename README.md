@@ -43,6 +43,9 @@ tests/               unit tests for signal processing + feature extraction
 ```bash
 pip install -r requirements.txt
 
+# For tests and retraining utilities:
+pip install -r requirements-dev.txt
+
 # Earth Engine auth (one-time, or set GOOGLE_APPLICATION_CREDENTIALS for servers)
 earthengine authenticate
 
